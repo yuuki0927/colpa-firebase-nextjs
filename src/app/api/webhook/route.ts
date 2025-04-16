@@ -12,8 +12,7 @@ export async function POST(req: Request) {
   const rawBody = Buffer.from(buf)
   const signature = req.headers.get('stripe-signature') as string
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let event: any
+  let event: Stripe.Event
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -22,8 +21,7 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
   } catch (err) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const error = err as any
+    const error = err as Error
     console.error('❌ Webhook署名検証失敗:', error.message)
     return new Response(`Webhook Error: ${error.message}`, { status: 400 })
   }
