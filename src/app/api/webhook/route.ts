@@ -15,6 +15,7 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     event = stripe.webhooks.constructEvent(
       rawBody,
       signature,
