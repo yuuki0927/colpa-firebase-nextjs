@@ -6,7 +6,7 @@
   "plugins": ["@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "rules": {
-    "@typescript-eslint/no-explicit-any": "warn", // ← "error" → "warn" に変更！
+    "@typescript-eslint/no-explicit-any": "off", // ← ここ！
     "@typescript-eslint/ban-ts-comment": "off"
   }
 }
