@@ -12,21 +12,23 @@ export async function POST(req: Request) {
   const rawBody = Buffer.from(buf)
   const signature = req.headers.get('stripe-signature') as string
 
-  let event: Stripe.Event
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let event: any
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     event = stripe.webhooks.constructEvent(
       rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
-  } catch (err: any) {
-    console.error('❌ Webhook署名検証失敗:', err.message)
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const error = err as any
+    console.error('❌ Webhook署名検証失敗:', error.message)
+    return new Response(`Webhook Error: ${error.message}`, { status: 400 })
   }
 
-  // ✅ イベントの種類と全データログ
+  // ✅ イベントログ出力（検証用）
   console.log('🔥 Webhookイベント受信:', event.type)
   console.log('📄 event.data:', JSON.stringify(event.data, null, 2))
 
