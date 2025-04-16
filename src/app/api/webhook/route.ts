@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       console.error('❌ Webhook署名検証失敗:', err.message)
       return new Response(`Webhook Error: ${err.message}`, { status: 400 })
     }
-    console.error('❌ Webhook署名検証失敗: unknown error')
+    console.error('❌ Webhook署名検証失敗: 未知のエラー')
     return new Response(`Webhook Error: Unknown`, { status: 400 })
   }
 
