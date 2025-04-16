@@ -28,7 +28,6 @@ export async function POST(req: Request) {
     return new Response(`Webhook Error: ${error.message}`, { status: 400 })
   }
 
-  // ✅ イベントログ出力（検証用）
   console.log('🔥 Webhookイベント受信:', event.type)
   console.log('📄 event.data:', JSON.stringify(event.data, null, 2))
 
