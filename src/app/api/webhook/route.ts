@@ -20,10 +20,13 @@ export async function POST(req: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     )
-  } catch (err) {
-    const error = err as Error
-    console.error('❌ Webhook署名検証失敗:', error.message)
-    return new Response(`Webhook Error: ${error.message}`, { status: 400 })
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error('❌ Webhook署名検証失敗:', err.message)
+      return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+    }
+    console.error('❌ Webhook署名検証失敗: unknown error')
+    return new Response(`Webhook Error: Unknown`, { status: 400 })
   }
 
   console.log('🔥 Webhookイベント受信:', event.type)
