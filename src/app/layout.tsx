@@ -2,7 +2,7 @@
 import './globals.css'
 import { Header } from '@/components/Header'
 import { Sidebar } from '@/components/Sidebar'
-import { AuthProvider } from '@/components/AuthContext'
+import { AuthProvider } from '@/components/auth/AuthContext'
 
 export const metadata = {
   title: '代理店募集サイト | COLPA',

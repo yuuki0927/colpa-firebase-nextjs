@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuthContext } from '@/components/AuthContext'
+import { useAuthContext } from '@/components/auth/AuthContext'
 import { useState } from 'react'
 
 export default function CancelButton() {

@@ -59,6 +59,9 @@ export async function POST(req: Request) {
         console.log('✅ Firestore 更新完了:', { uid, ...mapped })
       } catch (error) {
         console.error('❌ Firestore 更新失敗:', error)
+        if (error instanceof Error) {
+          console.error('🔥 詳細:', error.message)
+        }
       }
     } else {
       console.warn('⚠️ Firestore更新スキップ: 条件不足', { uid, priceId, customerId })

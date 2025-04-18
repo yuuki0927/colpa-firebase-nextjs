@@ -1,16 +1,18 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { onAuthStateChanged, User } from 'firebase/auth'
+import { onAuthStateChanged, signOut, User } from 'firebase/auth'
 import { auth, db } from '@/lib/firebase'
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 
 type AuthContextType = {
   currentUser: User | null | undefined
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: undefined,
+  logout: async () => {}, // 空の関数（初期値）
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -24,12 +26,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userRef = doc(db, 'users', user.uid)
         const userSnap = await getDoc(userRef)
 
-        // Firestoreにまだユーザーが登録されていなければ追加
         if (!userSnap.exists()) {
           await setDoc(userRef, {
             email: user.email,
             name: user.displayName || '',
-            type: 'company', // 👈仮で "company" 固定！後で切替可能にします
+            type: 'company',
             createdAt: serverTimestamp(),
           })
           console.log('✅ Firestoreにユーザー情報を保存しました')
@@ -42,8 +43,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe()
   }, [])
 
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      console.log('👋 ログアウト成功')
+    } catch (err) {
+      console.error('❌ ログアウト失敗:', err)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <AuthContext.Provider value={{ currentUser, logout }}>
       {children}
     </AuthContext.Provider>
   )
